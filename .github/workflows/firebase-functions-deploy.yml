@@ -9,9 +9,14 @@ on:
       - 'firebase/firestore.rules'
       - 'firebase/firestore.indexes.json'
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
