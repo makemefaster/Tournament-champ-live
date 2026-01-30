@@ -35,11 +35,12 @@ service cloud.firestore {
         allow create, update, delete: if isAdmin();
       }
       
-      // Standings subcollection (calculated)
+      // Standings subcollection (calculated by Cloud Functions)
       match /standings/{standingId} {
         // Anyone can read standings for published tournaments
         allow read: if get(/databases/$(database)/documents/tournaments/$(tournamentId)).data.isPublished == true || isAdmin();
-        // Only the system (via Cloud Functions) can write standings
+        // Cloud Functions have implicit write access via Admin SDK (bypasses these rules)
+        // Client-side writes are not allowed
         allow write: if false;
       }
     }

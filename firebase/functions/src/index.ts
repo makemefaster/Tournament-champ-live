@@ -12,6 +12,32 @@ export const updateStandings = functions.firestore
     const tournamentId = context.params.tournamentId;
     const db = admin.firestore();
 
+    // Get tournament to get sport type
+    const tournamentDoc = await db
+      .collection("tournaments")
+      .doc(tournamentId)
+      .get();
+
+    if (!tournamentDoc.exists) {
+      functions.logger.error(`Tournament ${tournamentId} not found`);
+      return;
+    }
+
+    const tournament = tournamentDoc.data();
+    const sportType = tournament?.sportType || "soccer";
+
+    // Determine scoring rules based on sport type
+    let winPoints = 3;
+    let drawPoints = 1;
+
+    if (sportType === "rugby") {
+      winPoints = 4;
+      drawPoints = 2;
+    } else if (sportType === "custom") {
+      winPoints = tournament?.customRules?.winPoints || 3;
+      drawPoints = tournament?.customRules?.drawPoints || 1;
+    }
+
     // Get all matches for this tournament
     const matchesSnapshot = await db
       .collection("tournaments")
@@ -72,10 +98,7 @@ export const updateStandings = functions.firestore
       awayStanding.goalDifference =
         awayStanding.goalsFor - awayStanding.goalsAgainst;
 
-      // Update results (using soccer rules by default)
-      const winPoints = 3;
-      const drawPoints = 1;
-
+      // Update results
       if (homeScore > awayScore) {
         homeStanding.won++;
         awayStanding.lost++;
@@ -135,11 +158,11 @@ export const validateTournament = functions.https.onCall(
     const matches = matchesSnapshot.docs.map((doc) => doc.data());
     const errors: any[] = [];
 
-    // Check for resource clashes
+    // Check for resource clashes - using | as delimiter to avoid hyphen conflicts
     const pitchTimeMap = new Map<string, string[]>();
 
     matches.forEach((match: any) => {
-      const key = `${match.pitchId}-${match.scheduledTime.toMillis()}`;
+      const key = `${match.pitchId}|${match.scheduledTime.toMillis()}`;
       const existing = pitchTimeMap.get(key) || [];
       existing.push(match.id);
       pitchTimeMap.set(key, existing);
@@ -147,7 +170,7 @@ export const validateTournament = functions.https.onCall(
 
     pitchTimeMap.forEach((matchIds, key) => {
       if (matchIds.length > 1) {
-        const [pitchId] = key.split("-");
+        const [pitchId] = key.split("|");
         errors.push({
           type: "resource-clash",
           message: `Pitch ${pitchId} has multiple matches scheduled`,
@@ -156,13 +179,13 @@ export const validateTournament = functions.https.onCall(
       }
     });
 
-    // Check for team clashes
+    // Check for team clashes - using | as delimiter
     const teamTimeMap = new Map<string, string[]>();
 
     matches.forEach((match: any) => {
       const time = match.scheduledTime.toMillis();
-      const homeKey = `${match.homeTeamId}-${time}`;
-      const awayKey = `${match.awayTeamId}-${time}`;
+      const homeKey = `${match.homeTeamId}|${time}`;
+      const awayKey = `${match.awayTeamId}|${time}`;
 
       const homeMatches = teamTimeMap.get(homeKey) || [];
       homeMatches.push(match.id);
@@ -175,7 +198,7 @@ export const validateTournament = functions.https.onCall(
 
     teamTimeMap.forEach((matchIds, key) => {
       if (matchIds.length > 1) {
-        const [teamId] = key.split("-");
+        const [teamId] = key.split("|");
         errors.push({
           type: "team-clash",
           message: `Team ${teamId} has multiple matches scheduled`,

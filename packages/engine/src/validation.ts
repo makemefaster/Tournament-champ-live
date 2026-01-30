@@ -10,7 +10,7 @@ export function validateSchedule(matches: Match[]): ValidationResult {
   const pitchTimeMap = new Map<string, string[]>();
   
   matches.forEach(match => {
-    const key = `${match.pitchId}-${match.scheduledTime.getTime()}`;
+    const key = `${match.pitchId}|${match.scheduledTime.getTime()}`;
     const existing = pitchTimeMap.get(key) || [];
     existing.push(match.id);
     pitchTimeMap.set(key, existing);
@@ -18,7 +18,7 @@ export function validateSchedule(matches: Match[]): ValidationResult {
 
   pitchTimeMap.forEach((matchIds, key) => {
     if (matchIds.length > 1) {
-      const [pitchId, timeStr] = key.split('-');
+      const [pitchId, timeStr] = key.split('|');
       errors.push({
         type: 'resource-clash',
         message: `Pitch ${pitchId} has multiple matches scheduled at ${new Date(parseInt(timeStr)).toISOString()}`,
@@ -31,8 +31,8 @@ export function validateSchedule(matches: Match[]): ValidationResult {
   const teamTimeMap = new Map<string, string[]>();
   
   matches.forEach(match => {
-    const homeKey = `${match.homeTeamId}-${match.scheduledTime.getTime()}`;
-    const awayKey = `${match.awayTeamId}-${match.scheduledTime.getTime()}`;
+    const homeKey = `${match.homeTeamId}|${match.scheduledTime.getTime()}`;
+    const awayKey = `${match.awayTeamId}|${match.scheduledTime.getTime()}`;
     
     const homeMatches = teamTimeMap.get(homeKey) || [];
     homeMatches.push(match.id);
@@ -45,7 +45,7 @@ export function validateSchedule(matches: Match[]): ValidationResult {
 
   teamTimeMap.forEach((matchIds, key) => {
     if (matchIds.length > 1) {
-      const [teamId, timeStr] = key.split('-');
+      const [teamId, timeStr] = key.split('|');
       errors.push({
         type: 'team-clash',
         message: `Team ${teamId} has multiple matches scheduled at ${new Date(parseInt(timeStr)).toISOString()}`,
