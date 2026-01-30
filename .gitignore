@@ -1,0 +1,44 @@
+# Node modules
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+.cache/
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Local Firebase config (should not be committed)
+apps/admin/firebase-config.js
+apps/live/firebase-config.js
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Temporary files
+tmp/
+temp/
+*.tmp

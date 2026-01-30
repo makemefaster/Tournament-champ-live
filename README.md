@@ -1,6 +1,33 @@
 # Tournament-champ-live
 
-Tournament Champ: Project Specification (V1)
+A real-time tournament management system with live scoring and administrative tools.
+
+## 🚀 Quick Start
+
+- **New to the project?** Start with [QUICKSTART.md](./QUICKSTART.md)
+- **Setting up Firebase?** Follow [FIREBASE_SETUP.md](./FIREBASE_SETUP.md)
+
+## 📁 Project Structure
+
+```
+/apps/admin          - Tournament Champ Admin (Architect web app)
+/apps/live           - Tournament Champ Live (Public scoreboard & umpire portal)
+/packages/shared     - Shared logic (scoring, validation, time utilities)
+```
+
+## ✅ Week 1 Status
+
+- [x] **Task 1**: Firebase Schema implemented with `sortOrder` for push-back logic
+- [x] Firestore security rules configured
+- [x] Database indexes defined
+- [x] Monorepo structure created
+- [x] Shared logic package with TypeScript types
+- [ ] **Task 2**: Logic Picker UI (Soccer/Rugby/Custom)
+- [ ] **Task 3**: GitHub Actions deployment pipeline (configured, needs testing)
+
+---
+
+## Tournament Champ: Project Specification (V1)
 ​1. Project Structure (The GitHub Monorepo)
 ​We will use a shared logic folder to ensure both apps calculate standings identically.
 ​/apps/admin (Tournament Champ Admin): The "Architect" web app.
@@ -22,6 +49,38 @@ Tournament Champ: Project Specification (V1)
 ​The Dropout Handler: Removes a team and converts their remaining matches into "Byes" or "Walkovers" without shifting the time slots (keeping the rest of the schedule intact).
 ​Week 1 Deliverables (The Skeleton)
 ​To get the GitHub repo and Firebase connection live, we will focus on these three coding tasks:
-​Task 1: The Firebase Schema. Setting up the "Matches" collection so it supports sortOrder for the push-back logic.
+​Task 1: The Firebase Schema. Setting up the "Matches" collection so it supports sortOrder for the push-back logic. ✅ **COMPLETED**
 ​Task 2: The Logic Picker. A simple UI where you select "Soccer," "Rugby," or "Custom."
 ​Task 3: The Deployment Pipeline. Setting up GitHub Actions so every time you "Commit," the Admin and Live apps update their respective URLs.
+
+## 📚 Documentation
+
+- **[FIREBASE_SETUP.md](./FIREBASE_SETUP.md)** - Complete Firebase installation guide
+- **[QUICKSTART.md](./QUICKSTART.md)** - Quick start for developers
+- **[firestore.rules](./firestore.rules)** - Database security rules
+- **[firestore.indexes.json](./firestore.indexes.json)** - Database indexes
+- **[packages/shared/types.ts](./packages/shared/types.ts)** - TypeScript type definitions
+
+## 🛠️ Key Features Implemented
+
+### Firebase Schema (Week 1 - Task 1) ✅
+- **Matches Collection**: Includes `sortOrder` field for push-back functionality
+- **Teams Collection**: Full standings tracking (points, goal difference, etc.)
+- **Tournaments Collection**: Tournament lifecycle management
+- **Security Rules**: Read access for all, write for authenticated admins
+- **Indexes**: Optimized queries for sorting by time and standings
+
+### Shared Logic Package ✅
+- **Scoring Engine**: Soccer rules (Win=3, Draw=1, Loss=0)
+- **Walkover Logic**: Automatic 3-0 award
+- **Tie-breakers**: Goal difference → Goals scored → Head-to-head
+- **Push-back Utilities**: Global time adjustment functions
+- **Conflict Detection**: Pitch and team clash validation
+- **Time Formatters**: Consistent time/date display
+
+## 🚧 Next Steps
+
+1. **Implement Logic Picker UI** (Task 2)
+2. **Test deployment pipeline** (Task 3)
+3. **Build Active Grid interface**
+4. **Implement Live Mode tools** (Push-back slider, Pitch Evacuator, Dropout Handler)

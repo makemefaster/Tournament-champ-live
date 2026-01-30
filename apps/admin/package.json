@@ -1,0 +1,17 @@
+{
+  "name": "tournament-champ-admin",
+  "version": "1.0.0",
+  "description": "Tournament Champ Admin - The Architect web app",
+  "main": "index.js",
+  "scripts": {
+    "dev": "echo 'Add your dev server command here'",
+    "build": "echo 'Add your build command here'",
+    "test": "echo 'Add your test command here'"
+  },
+  "dependencies": {
+    "firebase": "^10.7.1"
+  },
+  "keywords": ["tournament", "admin"],
+  "author": "",
+  "license": "MIT"
+}
