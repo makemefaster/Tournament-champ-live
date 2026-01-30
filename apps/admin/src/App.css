@@ -1,0 +1,102 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  padding: 2rem 0;
+  border-bottom: 2px solid #646cff;
+  margin-bottom: 2rem;
+}
+
+.App-header h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(45deg, #646cff, #747bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: #888;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  text-align: left;
+}
+
+.sport-selector h2,
+.scoring-rules h3,
+.features h3 {
+  margin-bottom: 1rem;
+  color: #646cff;
+}
+
+.sport-options {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sport-options button {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border: 2px solid #646cff;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.sport-options button:hover {
+  background: #646cff;
+  transform: translateY(-2px);
+}
+
+.sport-options button.active {
+  background: #646cff;
+  box-shadow: 0 4px 12px rgba(100, 108, 255, 0.4);
+}
+
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(100, 108, 255, 0.1);
+  border-radius: 8px;
+}
+
+.rule-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+
+.rule-label {
+  font-weight: 600;
+  color: #888;
+}
+
+.rule-value {
+  font-weight: 700;
+  color: #646cff;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: rgba(100, 108, 255, 0.1);
+  border-radius: 4px;
+  border-left: 3px solid #646cff;
+}

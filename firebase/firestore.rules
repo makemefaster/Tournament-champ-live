@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    
+    // Tournaments collection
+    match /tournaments/{tournamentId} {
+      // Anyone can read published tournaments
+      allow read: if resource.data.isPublished == true || isAdmin();
+      // Only admins can create/update/delete tournaments
+      allow create, update, delete: if isAdmin();
+      
+      // Matches subcollection
+      match /matches/{matchId} {
+        // Anyone can read matches for published tournaments
+        allow read: if get(/databases/$(database)/documents/tournaments/$(tournamentId)).data.isPublished == true || isAdmin();
+        // Only admins can modify matches
+        allow create, update, delete: if isAdmin();
+      }
+      
+      // Teams subcollection
+      match /teams/{teamId} {
+        // Anyone can read teams for published tournaments
+        allow read: if get(/databases/$(database)/documents/tournaments/$(tournamentId)).data.isPublished == true || isAdmin();
+        // Only admins can modify teams
+        allow create, update, delete: if isAdmin();
+      }
+      
+      // Standings subcollection (calculated)
+      match /standings/{standingId} {
+        // Anyone can read standings for published tournaments
+        allow read: if get(/databases/$(database)/documents/tournaments/$(tournamentId)).data.isPublished == true || isAdmin();
+        // Only the system (via Cloud Functions) can write standings
+        allow write: if false;
+      }
+    }
+    
+    // Admins collection
+    match /admins/{userId} {
+      // Only the user can read their own admin status
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      // No one can write via client (must be done via Admin SDK)
+      allow write: if false;
+    }
+    
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
