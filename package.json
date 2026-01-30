@@ -1,0 +1,28 @@
+{
+  "name": "tournament-champ",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tournament Champ - Monorepo for Admin and Live apps",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:admin": "npm run dev --workspace=apps/admin",
+    "dev:live": "npm run dev --workspace=apps/live",
+    "build:admin": "npm run build --workspace=apps/admin",
+    "build:live": "npm run build --workspace=apps/live",
+    "build:engine": "npm run build --workspace=packages/engine",
+    "build:all": "npm run build:engine && npm run build:admin && npm run build:live",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/makemefaster/Tournament-champ-live.git"
+  }
+}
