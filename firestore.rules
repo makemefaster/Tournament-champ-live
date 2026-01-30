@@ -23,21 +23,23 @@ service cloud.firestore {
     match /matches/{matchId} {
       // Anyone can read matches
       allow read: if true;
-      // Only authenticated users can write
-      allow create, update, delete: if isAuthenticated();
       
-      // Validate required fields
-      allow create: if request.resource.data.keys().hasAll([
-        'tournamentId', 
-        'homeTeam', 
-        'awayTeam', 
-        'scheduledTime', 
-        'sortOrder',
-        'status'
-      ]);
+      // Only authenticated users can write, with validation
+      allow create: if isAuthenticated() && 
+        request.resource.data.keys().hasAll([
+          'tournamentId', 
+          'homeTeam', 
+          'awayTeam', 
+          'scheduledTime', 
+          'sortOrder',
+          'status'
+        ]) && 
+        request.resource.data.sortOrder is number;
       
-      // Ensure sortOrder is a number for push-back functionality
-      allow update: if request.resource.data.sortOrder is number;
+      allow update: if isAuthenticated() && 
+        request.resource.data.sortOrder is number;
+        
+      allow delete: if isAuthenticated();
     }
     
     // Teams collection

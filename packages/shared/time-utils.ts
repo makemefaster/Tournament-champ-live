@@ -61,13 +61,12 @@ export function evacuatePitch(
 
 /**
  * Format time for display (e.g., "14:30")
+ * Uses manual formatting for consistency across locales
  */
 export function formatTime(date: Date): string {
-  return date.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  });
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
 }
 
 /**
@@ -98,7 +97,7 @@ export function getMatchDuration(start: Date, end: Date): number {
 /**
  * Add minutes to a date
  */
-function addMinutes(date: Date, minutes: number): Date {
+export function addMinutes(date: Date, minutes: number): Date {
   const result = new Date(date);
   result.setMinutes(result.getMinutes() + minutes);
   return result;

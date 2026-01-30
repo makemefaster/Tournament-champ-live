@@ -29,10 +29,9 @@ export function detectPitchConflicts(
       const match2End = new Date(match2.scheduledTime);
       match2End.setMinutes(match2End.getMinutes() + matchDuration);
       
-      // Check for overlap
+      // Check for overlap: matches overlap if one starts before the other ends
       const hasOverlap = 
-        isTimeBetween(match1.scheduledTime, match2.scheduledTime, match2End) ||
-        isTimeBetween(match2.scheduledTime, match1.scheduledTime, match1End);
+        (match1.scheduledTime < match2End && match1End > match2.scheduledTime);
       
       if (hasOverlap) {
         conflicts.push({
@@ -76,10 +75,9 @@ export function detectTeamConflicts(
       const match2End = new Date(match2.scheduledTime);
       match2End.setMinutes(match2End.getMinutes() + matchDuration);
       
-      // Check for overlap
+      // Check for overlap: matches overlap if one starts before the other ends
       const hasOverlap = 
-        isTimeBetween(match1.scheduledTime, match2.scheduledTime, match2End) ||
-        isTimeBetween(match2.scheduledTime, match1.scheduledTime, match1End);
+        (match1.scheduledTime < match2End && match1End > match2.scheduledTime);
       
       if (hasOverlap) {
         conflicts.push({
